@@ -16,7 +16,7 @@ Run with sqllogictest-rs:
 
 ```sh
 EXTERNAL_ENGINE_COMMAND_TEMPLATE="java -cp ./target/sqllogictest-jdbc-runner-1.0-SNAPSHOT-jar-with-dependencies.jar com.risingwave.sqllogictest.App jdbc:postgresql://{host}:{port}/{db} {user}"
-sqllogictest -- --engine=external --user=root --db=dev --port=4566 [slt]
+sqllogictest --engine=external --user=root --db=dev --port=4566 [slt]
 ```
 
 ## Contribution

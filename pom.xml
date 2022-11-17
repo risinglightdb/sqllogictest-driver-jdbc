@@ -6,7 +6,7 @@
 
   <groupId>com.risingwave.sqllogictest</groupId>
   <artifactId>sqllogictest-jdbc-runner</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.1</version>
 
   <name>sqllogictest-jdbc-runner</name>
   <url>https://github.com/risinglightdb/sqllogictest-rs</url>

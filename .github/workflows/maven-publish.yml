@@ -31,6 +31,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: target/sqllogictest-jdbc-runner-1.0.1-jar-with-dependencies.jar
           asset_name: sqllogictest-jdbc-runner-1.0.1-jar-with-dependencies.jar
+          asset_content_type: application/java-archive
       - name: Publish release
         uses: StuYarrow/publish-release@v1.1.2
         env:

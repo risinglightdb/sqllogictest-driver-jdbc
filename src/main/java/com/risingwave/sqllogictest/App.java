@@ -6,41 +6,42 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonStreamParser;
+import com.google.gson.Gson;
 
 public class App
 {
-    private static String handleOne(Statement stmt, String sql) throws SQLException {
-        var builder = new StringBuilder();
+    private static ArrayList<ArrayList<String>> handleOne(Statement stmt, String sql) throws SQLException {
+        var result = new ArrayList<ArrayList<String>>();
         if (stmt.execute(sql)) {
             try (ResultSet rs = stmt.getResultSet()) {
                 var colCnt = rs.getMetaData().getColumnCount();
                 while (rs.next()) {
+                    var arr = new ArrayList<String>();
                     for (var i = 1; i <= colCnt; i++) {
-                        if (i != 1) {
-                            builder.append(' ');
-                        }
                         var v = rs.getString(i);
                         if (v == null) {
-                            builder.append("NULL");
+                            arr.add("NULL");
                         } else if (v.isEmpty()) {
-                            builder.append("(empty)");
+                            arr.add("(empty)");
                         } else {
-                            builder.append(v);
+                            arr.add(v);
                         }
                     }
-                    builder.append('\n');
+                    result.add(arr);
                 }
             }
         }
-        return builder.toString();
+        return result;
     }
 
     private static void mainLoop(Connection conn) throws Exception {
         var parser = new JsonStreamParser(new InputStreamReader(System.in));
+        var gson = new Gson();
         try (var stmt = conn.createStatement()) {
             while (parser.hasNext()) {
                 var ele = parser.next();
@@ -48,13 +49,13 @@ public class App
                 try {
                     var result = handleOne(stmt, sql);
                     var resultJson = new JsonObject();
-                    resultJson.addProperty("result", result);
-                    System.out.println(resultJson.toString());
+                    resultJson.add("result", gson.toJsonTree(result));
+                    System.out.println(resultJson);
                 } catch (SQLException e) {
                     e.printStackTrace();
                     var resultJson = new JsonObject();
                     resultJson.addProperty("err", e.getMessage());
-                    System.out.println(resultJson.toString());
+                    System.out.println(resultJson);
                 }
             }
         }
@@ -62,7 +63,7 @@ public class App
 
     public static void main(String[] args)
     {
-        var url = args[0];;
+        var url = args[0];
         var props = new Properties();
         if (args.length > 1) {
             props.setProperty("user", args[1]);
